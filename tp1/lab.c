@@ -37,7 +37,7 @@ struct Wheel* createWheels(int id) {
 }
 
 void populateWingAttributes(struct Wing* wing, int id) {
-    for (int i = 0; i < 9; i++) {
+    for (int i = 1; i < MAX_PLANE_TYPE_LENGTH; i++) {
         wing->id[i] = (id % 10);
         id /= 10;
     }
