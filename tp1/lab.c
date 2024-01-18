@@ -8,23 +8,24 @@
 #define NUM_WHEELS 7
 #define NUM_WINGS 2
 #define NUM_PLANES 3
+#define BASE_ID_ARRAY_LENGTH 9
 
 struct Wheel {
     int id;
     bool isRearWheel;
 };
 
-struct Wing {
-    int id[NUM_WINGS];
+struct Wing{
+    int id[BASE_ID_ARRAY_LENGTH];
 };
 
-typedef struct {
+struct Plane{
     char id[MAX_ID_LENGTH];
     char planeType[MAX_PLANE_TYPE_LENGTH];
     bool isAvailable;
     struct Wheel wheels[NUM_WHEELS];
     struct Wing wings[NUM_WINGS];
-} Plane;
+};
 
 struct Wheel* createWheels(int id) {
     struct Wheel* wheels = malloc(sizeof(struct Wheel) * NUM_WHEELS);
@@ -37,24 +38,27 @@ struct Wheel* createWheels(int id) {
     return wheels;
 }
 
-void populateWingAttributes(struct Wing* wing, int id) {
-    for (int i = 1; i < MAX_PLANE_TYPE_LENGTH; i++) {
-        wing->id[i] = (id % 10);
-        id /= 10;
+void populateWingAttributes(struct Wing wing, int id) {
+    int* idArray = malloc((sizeof(int) * BASE_ID_ARRAY_LENGTH));
+
+    for (int i = BASE_ID_ARRAY_LENGTH - 1; i >=0 ; i--) {
+        wing.id[i] = id % 10;
+        id = id /10;
     }
+    free(idArray);
 }
 
 struct Wing* createWings(long id) {
     struct Wing* wings = malloc(sizeof(struct Wing) * NUM_WINGS);
 
     for (int i = 0; i < NUM_WINGS; i++) {
-        populateWingAttributes(&wings[i], id + i);
+        populateWingAttributes(wings[i], id + i);
     }
 
     return wings;
 }
 
-void createPlanes(Plane* planes, int id, int numberOfPlanes) {
+void createPlanes(struct Plane* planes, int id, int numberOfPlanes) {
     for (int i = 0; i < numberOfPlanes; i++) {
         snprintf(planes[i].id, MAX_ID_LENGTH, "%d", id + i);
         planes[i].isAvailable = true;
@@ -63,19 +67,25 @@ void createPlanes(Plane* planes, int id, int numberOfPlanes) {
     }
 }
 
-void setAvailability(Plane* plane, bool isAvailable) {
+void setAvailability(struct Plane* plane, bool isAvailable) {
     plane->isAvailable = isAvailable;
 }
 
-char* getAvailablePlanes(Plane* planeArray, int numberOfPlanes) {
+char* getAvailablePlanes(struct Plane* planeArray, int numberOfPlanes) {
     char* AvailablePlanesId = (char*)malloc(numberOfPlanes *sizeof(char));
     for (int currentIndex =0; currentIndex < numberOfPlanes; currentIndex++) {
         if ( planeArray[currentIndex].isAvailable == true) {
-            //AvailablePlanesId[currentIndex] = (char)(planeArray[currentIndex].id);
             strcpy(&AvailablePlanesId[currentIndex * MAX_ID_LENGTH], planeArray[currentIndex].id);
         }
     }
     return AvailablePlanesId;
+}
+
+void setPlaneType(struct Plane* plane) {
+    //plane->wings[0]
+    for (int i = 0; i < BASE_ID_ARRAY_LENGTH - 1; i++) {
+        printf("%d", plane->wings[0].id[i]);
+    }
 }
 
 int main(int argc, char** argv) {
@@ -87,34 +97,48 @@ int main(int argc, char** argv) {
 
     /* Create wheel - [2 points] */
     struct Wheel* wheels = createWheels(id);
+    printf("wheels\n");
+
 
     /* Create wing - [4 points] */
     long longId = 123456;
     struct Wing* wings = createWings(longId);
+    printf("wings\n");
 
     /* Create plane - [4 points] */
-    int numberOfPlanes = NUM_PLANES;
-    Plane* planes = malloc(sizeof(Plane) * numberOfPlanes);
-    createPlanes(planes, id, numberOfPlanes);
+    struct Plane* planes = malloc(sizeof(struct Plane) * NUM_PLANES);
+    if (planes == NULL) {
+    // Print an error message or handle the failure appropriately
+    fprintf(stderr, "Memory allocation failed\n");
+    exit(EXIT_FAILURE);  // or return an error code
+}
+    printf("planes\n");
+
+    //createPlanes(planes, id, NUM_PLANES);
+    printf("planes2\n");
+
 
     /* PARTIE 3 - [6 points] */
 
     /* Set availabilities - [1 point] */
     
-    Plane* plane = &planes[0];
+    struct Plane* plane = &planes[0];
     setAvailability(plane, true);
+
     
 
     /* Get available planes - [1 point] */
     
-    char* availablePlanes = getAvailablePlanes(planes, numberOfPlanes);
+    char* availablePlanes = getAvailablePlanes(planes, NUM_PLANES);
+    printf("availability\n");
+    
     
 
     /* Classify planes - [2 points] */
-    /*
-    Plane plane = planes[1];
+    
+    struct Plane* plane = &planes[1];
     setPlaneType(plane);
-    */
+    
 
     /* Return type-specific planes - [2 points] */
     /*
