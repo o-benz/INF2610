@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 
 #define MAX_ID_LENGTH 256
 #define MAX_PLANE_TYPE_LENGTH 10
@@ -17,13 +18,13 @@ struct Wing {
     int id[NUM_WINGS];
 };
 
-struct Plane {
+typedef struct {
     char id[MAX_ID_LENGTH];
     char planeType[MAX_PLANE_TYPE_LENGTH];
     bool isAvailable;
     struct Wheel wheels[NUM_WHEELS];
     struct Wing wings[NUM_WINGS];
-};
+} Plane;
 
 struct Wheel* createWheels(int id) {
     struct Wheel* wheels = malloc(sizeof(struct Wheel) * NUM_WHEELS);
@@ -53,13 +54,28 @@ struct Wing* createWings(long id) {
     return wings;
 }
 
-void createPlanes(struct Plane* planes, int id, int numberOfPlanes) {
+void createPlanes(Plane* planes, int id, int numberOfPlanes) {
     for (int i = 0; i < numberOfPlanes; i++) {
         snprintf(planes[i].id, MAX_ID_LENGTH, "%d", id + i);
         planes[i].isAvailable = true;
         createWheels(id);
         createWings(id);
     }
+}
+
+void setAvailability(Plane* plane, bool isAvailable) {
+    plane->isAvailable = isAvailable;
+}
+
+char* getAvailablePlanes(Plane* planeArray, int numberOfPlanes) {
+    char* AvailablePlanesId = (char*)malloc(numberOfPlanes *sizeof(char));
+    for (int currentIndex =0; currentIndex < numberOfPlanes; currentIndex++) {
+        if ( planeArray[currentIndex].isAvailable == true) {
+            //AvailablePlanesId[currentIndex] = (char)(planeArray[currentIndex].id);
+            strcpy(&AvailablePlanesId[currentIndex * MAX_ID_LENGTH], planeArray[currentIndex].id);
+        }
+    }
+    return AvailablePlanesId;
 }
 
 int main(int argc, char** argv) {
@@ -78,21 +94,21 @@ int main(int argc, char** argv) {
 
     /* Create plane - [4 points] */
     int numberOfPlanes = NUM_PLANES;
-    struct Plane* planes = malloc(sizeof(struct Plane) * numberOfPlanes);
+    Plane* planes = malloc(sizeof(Plane) * numberOfPlanes);
     createPlanes(planes, id, numberOfPlanes);
 
     /* PARTIE 3 - [6 points] */
 
     /* Set availabilities - [1 point] */
-    /*
-    Plane plane = planes[0];
+    
+    Plane* plane = &planes[0];
     setAvailability(plane, true);
-    */
+    
 
     /* Get available planes - [1 point] */
-    /*
-    getAvailablePlanes(planes, numberOfPlanes);
-    */
+    
+    char* availablePlanes = getAvailablePlanes(planes, numberOfPlanes);
+    
 
     /* Classify planes - [2 points] */
     /*
@@ -105,4 +121,9 @@ int main(int argc, char** argv) {
     char planeType[] = "Small";
     getPlanesByType(planes, planeType, NUM_PLANES);
     */
+   free(planes);
+   free(wheels);
+   free(wings);
+   free(availablePlanes);
+   return 0;
 }
