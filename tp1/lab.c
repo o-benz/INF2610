@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <math.h>
 
 #define MAX_ID_LENGTH 256
 #define MAX_PLANE_TYPE_LENGTH 10
@@ -23,8 +24,8 @@ struct Plane{
     char id[MAX_ID_LENGTH];
     char planeType[MAX_PLANE_TYPE_LENGTH];
     bool isAvailable;
-    struct Wheel wheels[NUM_WHEELS];
-    struct Wing wings[NUM_WINGS];
+    struct Wheel* wheels;
+    struct Wing* wings;
 };
 
 struct Wheel* createWheels(int id) {
@@ -38,11 +39,11 @@ struct Wheel* createWheels(int id) {
     return wheels;
 }
 
-void populateWingAttributes(struct Wing wing, int id) {
+void populateWingAttributes(struct Wing* wing, int id) {
     int* idArray = malloc((sizeof(int) * BASE_ID_ARRAY_LENGTH));
 
     for (int i = BASE_ID_ARRAY_LENGTH - 1; i >=0 ; i--) {
-        wing.id[i] = id % 10;
+        wing->id[i] = id % 10;
         id = id /10;
     }
     free(idArray);
@@ -52,7 +53,7 @@ struct Wing* createWings(long id) {
     struct Wing* wings = malloc(sizeof(struct Wing) * NUM_WINGS);
 
     for (int i = 0; i < NUM_WINGS; i++) {
-        populateWingAttributes(wings[i], id + i);
+        populateWingAttributes(&wings[i], id + i);
     }
 
     return wings;
@@ -62,8 +63,8 @@ void createPlanes(struct Plane* planes, int id, int numberOfPlanes) {
     for (int i = 0; i < numberOfPlanes; i++) {
         snprintf(planes[i].id, MAX_ID_LENGTH, "%d", id + i);
         planes[i].isAvailable = true;
-        createWheels(id);
-        createWings(id);
+        planes[i].wheels = createWheels(id);
+        planes[i].wings = createWings(id);
     }
 }
 
@@ -81,11 +82,19 @@ char* getAvailablePlanes(struct Plane* planeArray, int numberOfPlanes) {
     return AvailablePlanesId;
 }
 
+int charToInt(char c){ //fonction prise intégralement d'un article de Intervie Sensar disponible ici : https://interviewsansar.com/char-to-int-c-program/
+	int num = 0;
+	num = c - '0';
+	return num;
+}
+
 void setPlaneType(struct Plane* plane) {
-    //plane->wings[0]
-    for (int i = 0; i < BASE_ID_ARRAY_LENGTH - 1; i++) {
-        printf("%d", plane->wings[0].id[i]);
+    bool isNumberStarted = false;
+    int id = 0;
+    for (int i = 0; i < BASE_ID_ARRAY_LENGTH ; i++) {
+        id = id *10 + plane->wings[0].id[i];
     }
+
 }
 
 int main(int argc, char** argv) {
@@ -107,14 +116,9 @@ int main(int argc, char** argv) {
 
     /* Create plane - [4 points] */
     struct Plane* planes = malloc(sizeof(struct Plane) * NUM_PLANES);
-    if (planes == NULL) {
-    // Print an error message or handle the failure appropriately
-    fprintf(stderr, "Memory allocation failed\n");
-    exit(EXIT_FAILURE);  // or return an error code
-}
     printf("planes\n");
 
-    //createPlanes(planes, id, NUM_PLANES);
+    createPlanes(planes, id, NUM_PLANES);
     printf("planes2\n");
 
 
@@ -136,8 +140,8 @@ int main(int argc, char** argv) {
 
     /* Classify planes - [2 points] */
     
-    struct Plane* plane = &planes[1];
-    setPlaneType(plane);
+    struct Plane plane2 = planes[1];
+    setPlaneType(&plane2);
     
 
     /* Return type-specific planes - [2 points] */
