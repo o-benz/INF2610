@@ -73,19 +73,13 @@ void setAvailability(struct Plane* plane, bool isAvailable) {
 }
 
 char* getAvailablePlanes(struct Plane* planeArray, int numberOfPlanes) {
-    char* AvailablePlanesId = (char*)malloc(numberOfPlanes *sizeof(char));
+    char* AvailablePlanesId = (char*)malloc(MAX_ID_LENGTH * numberOfPlanes *sizeof(char));
     for (int currentIndex =0; currentIndex < numberOfPlanes; currentIndex++) {
         if ( planeArray[currentIndex].isAvailable == true) {
             strcpy(&AvailablePlanesId[currentIndex * MAX_ID_LENGTH], planeArray[currentIndex].id);
         }
     }
     return AvailablePlanesId;
-}
-
-int charToInt(char c){ //fonction prise intégralement d'un article de Intervie Sensar disponible ici : https://interviewsansar.com/char-to-int-c-program/
-	int num = 0;
-	num = c - '0';
-	return num;
 }
 
 void setPlaneType(struct Plane* plane) {
@@ -95,6 +89,25 @@ void setPlaneType(struct Plane* plane) {
         id = id *10 + plane->wings[0].id[i];
     }
 
+    int typeId = id & 10;
+    if (0 <= typeId || typeId >= 2) {
+        snprintf(plane->planeType, sizeof(plane->planeType), "Small%s", "");
+    } else if (3 <= typeId || typeId >= 6) {
+        snprintf(plane->planeType, sizeof(plane->planeType), "Medium%s", "");
+    } else if (7 <= typeId || typeId >= 8) {
+        snprintf(plane->planeType, sizeof(plane->planeType), "Large%s", "");
+    }
+}
+
+struct Plane* getPlanesByType(struct Plane* planes, char* searchedType, int nbOfPlanes) {
+    struct Plane* result = malloc(sizeof(struct Plane) * NUM_PLANES);
+    int index = 0;
+    for (int i = 0; i < nbOfPlanes; i++) {
+        if (strcmp(planes[i].planeType, searchedType) == 0) {
+            result[index++] = planes[i];
+        }
+    }
+    return result;
 }
 
 int main(int argc, char** argv) {
@@ -129,29 +142,25 @@ int main(int argc, char** argv) {
     struct Plane* plane = &planes[0];
     setAvailability(plane, true);
 
-    
-
     /* Get available planes - [1 point] */
     
     char* availablePlanes = getAvailablePlanes(planes, NUM_PLANES);
     printf("availability\n");
     
-    
-
     /* Classify planes - [2 points] */
     
     struct Plane plane2 = planes[1];
-    setPlaneType(&plane2);
-    
+    setPlaneType(&plane2); 
 
     /* Return type-specific planes - [2 points] */
-    /*
+    
     char planeType[] = "Small";
-    getPlanesByType(planes, planeType, NUM_PLANES);
-    */
-   free(planes);
-   free(wheels);
-   free(wings);
-   free(availablePlanes);
-   return 0;
+    struct Plane* smallPlanes = getPlanesByType(planes, planeType, NUM_PLANES);
+    
+    free(planes);
+    free(wheels);
+    free(wings);
+    free(availablePlanes);
+    free(smallPlanes);
+    return 0;
 }
