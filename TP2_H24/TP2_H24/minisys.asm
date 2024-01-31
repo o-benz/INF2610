@@ -3,13 +3,13 @@
 ; Automne  2023
 ; Initlab - minisys.asm
 ;
-; ajoutez vos noms, prénoms et matricules
-;
+; ajoutez vos noms, prénoms et matricule
+; Michaud, Maël 2209239 - Omar Benzekri 2244082
 ; Documentation NASM: http://www.nasm.us/doc/nasmdoc3.html
 ;
 ; Déclarations de constantes (equivalent à #define)
     sys_write           equ    1
-    sys_exit            equ    60
+    sys_exit            equ    10
     stdout              equ    1
     sys_nanosleep       equ    35
 
@@ -22,6 +22,8 @@ SECTION .data
     msg         db    "INF2610-TP1 ", 0x0A        ; char * msg = "INF2610-TP1 \n";
     msg_len     equ   $-msg                       ; msg_len = taille de msg
 
+    msg2        db    "Fin de la pause!", 0x0A    ;
+    msg2_len     equ   $-msg2                     ;
 
 ; Voir: man nanosleep pour les paramètres
 ; premier paramètre, à passer à sys_nanosleep, est de type struct timespec :  delay1 (3 secondes, 100 nanosecondes)
@@ -59,7 +61,21 @@ _start:
     ; TODO: Pause avec sys_nanosleep suivi de sys_write "Fin de la pause!\n"
     ; prototype: nanosleep(   struct timespec *time1,
     ;                         struct timespec *time2)
-    
+        xor rdi, rdi                ; remise a 0
+        xor rsi, rsi                ; remise a 0
+        mov rdi, delay1             ; argument 1
+        mov rsi, delay2             ; argument 2
+        mov rax, sys_nanosleep      ; appel system dans rax
+        syscall                     ; interruption logicielle
+
+        xor rdi, rdi                ; remise a 0
+        xor rsi, rsi                ; remise a 0
+        xor rdx, rdx                ; remise a 0
+        mov rdi, stdout             ; argument 1
+        mov rsi, msg2                ; argument 2
+        mov rdx, msg2_len            ; argument 3
+        mov rax, sys_write          ; appel systeme dans rax
+        syscall                     ; interruption logicielle
     
     ;
     ; Terminaison du processus

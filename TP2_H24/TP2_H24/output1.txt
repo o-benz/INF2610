@@ -1,0 +1,42 @@
+/home/gigl/Documents/INF2610-TPs/TP2_H24/TP2_H24 (pwd)
+/home/gigl/Documents/INF2610-TPs (cd && pwd)
+Makefile (ls)
+minisys.asm
+output1.txt
+output2.txt
+output3.txt
+output4.txt
+part1.c
+part2.c
+TP2_INF2610.pdf
+Makefile (ls | sort)
+minisys.asm
+output1.txt
+output2.txt
+output3.txt
+output4.txt
+part1.c
+part2.c
+TP2_INF2610.pdf
+message1 (cat foo.txt)
+message2 
+Makefile (ls)
+minisys.asm
+output1.txt
+output2.txt
+output3.txt
+output4.txt
+part1.c
+part2.c
+TP2_INF2610.pdf
+Linux (uname)
+Linux (uname -s)
+5.18.19-200.fc36.x86_64 (uname -r)
+GNU/Linux (uname -o)
+x86_64 (uname -m)
+/home/gigl/.local/bin:/home/gigl/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/opt/pmccabe:/usr/local/cours/inf1900/SimulIDE_0.3.12-SR8-INF1900.3/bin:/usr/local/cours/inf1900/bin:/opt/pmccabe:/usr/local/cours/inf1900/SimulIDE_0.3.12-SR8-INF1900.3/bin:/usr/local/cours/inf1900/bin (echo $PATH)
+/usr/bin/sleep (which sleep)
+                ( sleep 1)
+                ($(dirname "$(command -v sleep)")/sleep 1)
+                (../../../../../../usr/bin/sleep 1)
+(En annulant sleep 1000 avec ctl ^C, il n'y a pas de nouvelle ligne)
