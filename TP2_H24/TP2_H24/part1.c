@@ -1,30 +1,28 @@
-/*
- * Ecole polytechnique de Montreal - GIGL
- * Hiver  2024
- * Initlab - part1.c
- * 
- * ajoutez vos noms, prénoms, matricules et votre section de laboratoire
- * Michaud, Maël
- */
+#include <stdio.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
 
-// TODO
-// Si besoin, ajouter ici les directives d'inclusion et les déclarations globales
-// -------------------------------------------------
-
-   #include <fcntl.h>
-
-   int open(const char *path, int oflags);
-// -------------------------------------------------
-
-int main () {
-    // TODO
-    int fileOpen = open("./output2.txt", O_TRUNC);
+int main() {
+    int fileOpen = open("./output2.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
     if (fileOpen < 0) {
-        printf("Appel système open a échoué");
+        perror("Appel système open a échoué");
         return 1;
     }
-    printf("Saisissez votre texte suivi de CTRL-D :\n");
-    
 
+    printf("Saisissez votre texte suivi de CTRL-D :\n");
+
+    char c;
+    while (read(STDIN_FILENO, &c, 1) > 0) {
+        if (c == 4)
+            break;
+        if (write(fileOpen, &c, 1) != 1) {
+            perror("Appel système write a échoué");
+            close(fileOpen);
+            return 1;
+        }
+    }
+
+    close(fileOpen);\
     return 0;
 }
