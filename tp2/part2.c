@@ -4,26 +4,20 @@
 #include <unistd.h>
 
 void part21() {
-    printf("77dbcb01f571f1c32e196c3a7d26f62e (printed using printf)\n");
-    int fileOpen = open("./output3.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-    if (fileOpen < 0) {
-        perror("Appel système open a échoué");
-        exit(1);
+    char message[] = "77dbcb01f571f1c32e196c3a7d26f62e (printed using printf)";
+    for (int i = 0; i < sizeof(message); i++) {
+        printf("%c" ,message[i]);
     }
-    write(fileOpen, "77dbcb01f571f1c32e196c3a7d26f62e (printed using write)\n", 58);
-    close(fileOpen);
+        write(0, "77dbcb01f571f1c32e196c3a7d26f62e (printed using write)\n", 56);
 }
 
 void part22() {
     setvbuf(stdout, NULL, _IONBF, 0); // Désactiver le buffering pour stdout
-    printf("77dbcb01f571f1c32e196c3a7d26f62e (printed using printf)\n");
-    int fileOpen = open("./output4.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-    if (fileOpen < 0) {
-        perror("Appel système open a échoué");
-        exit(1);
+        char message[] = "77dbcb01f571f1c32e196c3a7d26f62e (printed using printf)";
+    for (int i = 0; i < sizeof(message); i++) {
+        printf("%c" ,message[i]);
     }
-    write(fileOpen, "77dbcb01f571f1c32e196c3a7d26f62e (printed using write)\n", 58);
-    close(fileOpen);
+        write(0, "77dbcb01f571f1c32e196c3a7d26f62e (printed using write)\n", 56);
 }
 
 int main(int argc, char *argv[]) {
