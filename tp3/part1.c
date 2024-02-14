@@ -2,7 +2,8 @@
  * processlab - part1.c
  *
  * Ecole polytechnique de Montreal, GIGL, Hiver 2024
- * vos noms, prénoms et matricules
+ * Benzekri Omar, 244082
+ * Michaud Mael, 2209239
 */
 
 #include "libprocesslab/libprocesslab.h"
