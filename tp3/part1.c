@@ -17,17 +17,37 @@ void question1()
 {
    
     // TODO
-    if (fork() == 0) {
+    if (fork() == 0) { // level 1.1
+        if(fork() == 0) {
 
+        }
     }
-    if (fork() == 0) {
 
+    if (fork() == 0) { // level 1.2
+        if(fork() == 0) {
+            
+        }
+        if(fork() == 0) {
+            
+        }
     }
-    if (fork() == 0) {
 
+    if (fork() == 0) { // level 1.3
+        if(fork() == 0) {
+            
+        }
     }
-    if (fork() == 0) {
-        
+
+    if (fork() == 0) { // level 1.4
+        if(fork() == 0) {
+            
+        }
+        if(fork() == 0) {
+            
+        }
+        if(fork() == 0) {
+            
+        }
     }
 
 }
