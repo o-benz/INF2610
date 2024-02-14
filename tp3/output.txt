@@ -1,0 +1,38 @@
+13649 clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7f4b7cb82a10) = 13650
+13649 clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7f4b7cb82a10) = 13651
+13650 clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD <unfinished ...>
+13649 clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD <unfinished ...>
+13651 clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD <unfinished ...>
+13649 <... clone resumed>, child_tidptr=0x7f4b7cb82a10) = 13653
+13650 <... clone resumed>, child_tidptr=0x7f4b7cb82a10) = 13652
+13649 clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7f4b7cb82a10) = 13655
+13653 clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD <unfinished ...>
+13651 <... clone resumed>, child_tidptr=0x7f4b7cb82a10) = 13654
+13652 +++ exited with 0 +++
+13653 <... clone resumed>, child_tidptr=0x7f4b7cb82a10) = 13656
+13649 +++ exited with 0 +++
+13655 clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD <unfinished ...>
+13650 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=13652, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+13654 +++ exited with 0 +++
+13656 +++ exited with 0 +++
+13655 <... clone resumed>, child_tidptr=0x7f4b7cb82a10) = 13657
+13651 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=13654, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+13653 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=13656, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+13651 clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD <unfinished ...>
+13657 +++ exited with 0 +++
+13650 +++ exited with 0 +++
+13651 <... clone resumed>, child_tidptr=0x7f4b7cb82a10) = 13658
+13655 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=13657, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+13653 +++ exited with 0 +++
+13655 clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD <unfinished ...>
+13658 +++ exited with 0 +++
+13655 <... clone resumed>, child_tidptr=0x7f4b7cb82a10) = 13659
+13651 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=13658, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+13659 +++ exited with 0 +++
+13655 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=13659, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+13655 clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD <unfinished ...>
+13651 +++ exited with 0 +++
+13655 <... clone resumed>, child_tidptr=0x7f4b7cb82a10) = 13660
+13660 +++ exited with 0 +++
+13655 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=13660, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+13655 +++ exited with 0 +++

@@ -8,47 +8,50 @@
 
 #include "libprocesslab/libprocesslab.h"
 
-// TODO
-// Si besoin, ajouter ici les directives d'inclusion
-// -------------------------------------------------
-
-// -------------------------------------------------
-
 void question1()
 {
-   
-    // TODO
     if (fork() == 0) { // level 1.1
         if(fork() == 0) {
-
+            exit(0);
         }
+        wait(NULL);
+        exit(0);
     }
 
     if (fork() == 0) { // level 1.2
         if(fork() == 0) {
-            
+            exit(0);
         }
+        wait(NULL);
         if(fork() == 0) {
-            
+            exit(0);
         }
+        wait(NULL);
+        exit(0);
     }
 
     if (fork() == 0) { // level 1.3
         if(fork() == 0) {
-            
+            exit(0);
         }
+        wait(NULL);
+        exit(0);
     }
 
     if (fork() == 0) { // level 1.4
         if(fork() == 0) {
-            
+            exit(0);
         }
+        wait(NULL);
         if(fork() == 0) {
-            
+            exit(0);
         }
+        wait(NULL);
         if(fork() == 0) {
-            
+            exit(0);
         }
+        wait(NULL);
+        exit(0);
     }
 
 }
