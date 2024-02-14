@@ -38,7 +38,7 @@ void question1()
         exit(1);
     }
     wait(&status);
-    total_child += WEXITSTATUS(status) + 1;
+    total_child += WEXITSTATUS(status) + 1; //retreiving the exit status, other way didn't work
 
     if ((pid = fork()) == 0) { // level 1.2
         ppid = getppid();
@@ -122,4 +122,6 @@ void question1()
 
     printf("Nombre total de fils crée : %d\n", total_child);
     printProcRegistrations();
+
+    execlp("ls", "ls", "-l", ".", NULL);
 }
