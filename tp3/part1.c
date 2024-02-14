@@ -11,13 +11,15 @@
 void question1()
 {
     pid_t pid, ppid;
-    int level, num;
+    int level, num, status;
+    int total_child = 0;
 
     // Register level0 process
     pid = getpid();
     ppid = getppid();
     level = 0;
     num = 0;
+    
     registerProc(pid, ppid, level, num);
 
     if ((pid = fork()) == 0) { // level 1.1
@@ -33,8 +35,10 @@ void question1()
             exit(0);
         }
         wait(NULL);
-        exit(0);
+        exit(1);
     }
+    wait(&status);
+    total_child += WEXITSTATUS(status) + 1;
 
     if ((pid = fork()) == 0) { // level 1.2
         ppid = getppid();
@@ -57,8 +61,10 @@ void question1()
             exit(0);
         }
         wait(NULL);
-        exit(0);
+        exit(2);
     }
+    wait(&status);
+    total_child += WEXITSTATUS(status) + 1;
 
     if ((pid = fork()) == 0) { // level 1.3
         ppid = getppid();
@@ -73,8 +79,10 @@ void question1()
             exit(0);
         }
         wait(NULL);
-        exit(0);
+        exit(1);
     }
+    wait(&status);
+    total_child += WEXITSTATUS(status) + 1;
 
     if ((pid = fork()) == 0) { // level 1.4
         ppid = getppid();
@@ -105,12 +113,13 @@ void question1()
             exit(0);
         }
         wait(NULL);
-        exit(0);
+        exit(3);
     }
+    wait(&status);
+    total_child += WEXITSTATUS(status) + 1;
 
-    // Wait for all child processes to finish
     while (wait(NULL) > 0);
 
-    // Print process registrations
+    printf("Nombre total de fils crée : %d\n", total_child);
     printProcRegistrations();
 }
