@@ -10,48 +10,107 @@
 
 void question1()
 {
-    if (fork() == 0) { // level 1.1
-        if(fork() == 0) {
+    pid_t pid, ppid;
+    int level, num;
+
+    // Register level0 process
+    pid = getpid();
+    ppid = getppid();
+    level = 0;
+    num = 0;
+    registerProc(pid, ppid, level, num);
+
+    if ((pid = fork()) == 0) { // level 1.1
+        ppid = getppid();
+        level = 1;
+        num = 1;
+        registerProc(pid, ppid, level, num);
+        if((pid = fork()) == 0) {
+            ppid = getppid();
+            level = 2;
+            num = 1;
+            registerProc(pid, ppid, level, num);
             exit(0);
         }
         wait(NULL);
         exit(0);
     }
 
-    if (fork() == 0) { // level 1.2
-        if(fork() == 0) {
+    if ((pid = fork()) == 0) { // level 1.2
+        ppid = getppid();
+        level = 1;
+        num = 2;
+        registerProc(pid, ppid, level, num);
+        if((pid = fork()) == 0) {
+            ppid = getppid();
+            level = 2;
+            num = 2;
+            registerProc(pid, ppid, level, num);
             exit(0);
         }
         wait(NULL);
-        if(fork() == 0) {
-            exit(0);
-        }
-        wait(NULL);
-        exit(0);
-    }
-
-    if (fork() == 0) { // level 1.3
-        if(fork() == 0) {
-            exit(0);
-        }
-        wait(NULL);
-        exit(0);
-    }
-
-    if (fork() == 0) { // level 1.4
-        if(fork() == 0) {
-            exit(0);
-        }
-        wait(NULL);
-        if(fork() == 0) {
-            exit(0);
-        }
-        wait(NULL);
-        if(fork() == 0) {
+        if((pid = fork()) == 0) {
+            ppid = getppid();
+            level = 2;
+            num = 3;
+            registerProc(pid, ppid, level, num);
             exit(0);
         }
         wait(NULL);
         exit(0);
     }
 
+    if ((pid = fork()) == 0) { // level 1.3
+        ppid = getppid();
+        level = 1;
+        num = 3;
+        registerProc(pid, ppid, level, num);
+        if((pid = fork()) == 0) {
+            ppid = getppid();
+            level = 2;
+            num = 4;
+            registerProc(pid, ppid, level, num);
+            exit(0);
+        }
+        wait(NULL);
+        exit(0);
+    }
+
+    if ((pid = fork()) == 0) { // level 1.4
+        ppid = getppid();
+        level = 1;
+        num = 4;
+        registerProc(pid, ppid, level, num);
+        if((pid = fork()) == 0) {
+            ppid = getppid();
+            level = 2;
+            num = 5;
+            registerProc(pid, ppid, level, num);
+            exit(0);
+        }
+        wait(NULL);
+        if((pid = fork()) == 0) {
+            ppid = getppid();
+            level = 2;
+            num = 6;
+            registerProc(pid, ppid, level, num);
+            exit(0);
+        }
+        wait(NULL);
+        if((pid = fork()) == 0) {
+            ppid = getppid();
+            level = 2;
+            num = 7;
+            registerProc(pid, ppid, level, num);
+            exit(0);
+        }
+        wait(NULL);
+        exit(0);
+    }
+
+    // Wait for all child processes to finish
+    while (wait(NULL) > 0);
+
+    // Print process registrations
+    printProcRegistrations();
 }
