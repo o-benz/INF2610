@@ -17,9 +17,9 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <pthread.h>
-#define _NB_1 3
-#define _NB_2 6
-#define _ALL 10
+#define _NB_1 4
+#define _NB_2 7
+#define _ALL 12
 #define _LEVELS 2
 struct seg_t { int procLevel; int procNum; pid_t pid; pid_t ppid; };
 struct seg_t* allocateSharedMemory(long size);

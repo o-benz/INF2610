@@ -17,4 +17,17 @@ void question1()
 {
    
     // TODO
+    if (fork() == 0) {
+
+    }
+    if (fork() == 0) {
+
+    }
+    if (fork() == 0) {
+
+    }
+    if (fork() == 0) {
+        
+    }
+
 }
