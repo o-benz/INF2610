@@ -1,0 +1,28 @@
+1,13c1,13
+< UN CHEMIN QUI EST UN CHEMIN
+< SANS êTRE UN CHEMIN
+< PORTE CE QUI PASSE
+< ET AUSSI CE QUI NE PASSE PAS
+< CE QUI PASSE EST DéJà PASSé
+< AU MOMENT Où JE LE DIS
+< CE QUI PASSERA
+< JE NE L'ATTENDS PLUS JE NE L'ATTEINS PAS
+< JE TREMBLE DE NOMMER LES CHOSES CAR CHACUNE PREND VIE ET MEURT à L'INSTANT MêME Où JE L'éCRIS.
+< MOI-MêME JE M'EFFACE COMME LES CHOSES QUE JE DIS DANS UN FORT TUMULTE DE BRUITS, DE CRIS.
+< LA RèGLE D'OR DE LA CONDUITE EST LA TOLéRANCE MUTUELLE, 
+< CAR NOUS NE PENSERONS JAMAIS TOUS DE LA MêME FAçON, 
+< NOUS NE VERRONS QU'UNE PARTIE DE LA VéRITé ET SOUS DES ANGLES DIFFéRENTS.
+---
+> Un chemin qui est un chemin
+> sans être un chemin
+> porte ce qui passe
+> et aussi ce qui ne passe pas
+> Ce qui passe est déjà passé
+> au moment où je le dis
+> Ce qui passera
+> je ne l'attends plus je ne l'atteins pas
+> Je tremble de nommer les choses car chacune prend vie et meurt à l'instant même où je l'écris.
+> Moi-même je m'efface comme les choses que je dis dans un fort tumulte de bruits, de cris.
+> La règle d'or de la conduite est la tolérance mutuelle, 
+> car nous ne penserons jamais tous de la même façon, 
+> nous ne verrons qu'une partie de la vérité et sous des angles différents.
