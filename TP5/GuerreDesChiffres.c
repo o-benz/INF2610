@@ -1,112 +1,162 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdbool.h>
 #include <pthread.h>
-#include <semaphore.h>
 #include <signal.h>
-//..
-int chiffreProduit = 0;
-int chiffreConsommes = 0;
-bool flag_de_fin = false;
-sem_t* semProd;
-sem_t* semCons;
+#include <unistd.h>
+#include <semaphore.h>
 
+static bool flag_de_fin = false;
 
-void* producteur(void* pid) {
-    srand(time(NULL));
-    int sommeChiffreProduit = 0;    
-    int x;
-    while(!flag_de_fin) {
-        sem_wait(&semCons);
+static int *tampon;
+static int sizeTampon;
+static int sommeProduit = 0;
+static int sommeConsommee = 0;
 
-        x = (rand()%9) +1;
-        //mettre x dans le tampon ici
-        sommeChiffreProduit += x;
-        chiffreProduit += 1;
+static int ip = 0;
+static int ic = 0;
 
-        sem_post(&semProd);
-    }
-    pthread_exit((void*)(long)sommeChiffreProduit);
-    return NULL;
+static sem_t libre;
+static sem_t occupe;
+static sem_t mutex;
+
+void *producteur(void *pid)
+{
+   int *nbGenere = malloc(sizeof(int));
+   srand(time(NULL));
+
+   while (!flag_de_fin)
+   {
+      sem_wait(&libre);
+      int chiffreRandom = rand() % 9 + 1;
+
+      sem_wait(&mutex);
+      tampon[ip] = chiffreRandom;
+      sommeProduit += chiffreRandom;
+      ip = (ip + 1) % sizeTampon;
+      sem_post(&mutex);
+
+      sem_post(&occupe);
+
+      ++(*nbGenere);
+   }
+
+   sem_wait(&libre);
+   sem_wait(&mutex);
+   tampon[ip] = 0;
+   ip = (ip + 1) % sizeTampon;
+   sem_post(&mutex);
+   sem_post(&occupe);
+
+   printf("Fin de production du thread %d\n", (int)(long)pid);
+   pthread_exit(nbGenere);
 }
 
-void* consommateur(void* cid) {
-    // ...
-    int sommeChiffreConsommes = 0;
-    while (1) {
-        sem_wait(&semProd);
+void *consommateur(void *cid)
+{
+   int *nbConsomme = malloc(sizeof(int));
+   int objRecupere;
 
-        // lire du tampon ici
-        // quitter la boucle si lecture = 0
-        sommeChiffreConsommes; //ajouter la valeur lue
-        chiffreConsommes += 1;
-        sem_post(&semCons);
+   do
+   {
+      printf("Consommation du thread %d\n", (int)(long)cid);
+      sem_wait(&occupe);
 
-    }
-    sem_post(&semCons); // Au cas ou on quitte la boucle (lecture=0)
-    pthread_exit((void*)(long)sommeChiffreConsommes);
+      sem_wait(&mutex);
+      objRecupere = tampon[ic];
+      sommeConsommee += objRecupere;
+      ic = (ic + 1) % sizeTampon;
+      sem_post(&mutex);
 
-    return NULL;
+      sem_post(&libre);
+
+      ++(*nbConsomme);
+   } while (objRecupere != 0);
+
+   printf("Fin de consommation du thread %d\n", (int)(long)cid);
+   pthread_exit(nbConsomme);
 }
 
-void handler(int signum) {
-    flag_de_fin = 1;
+
+void actionAlarme()
+{
+   flag_de_fin = true;
 }
 
+int main(int argc, char *argv[])
+{
+   int numProd = atoi(argv[1]);
+   int numCons = atoi(argv[2]);
+   sizeTampon = atoi(argv[3]);
 
-int main(int argc, char* argv[]) {
-    // Les paramètres du programme sont, dans l'ordre :
-    // le nombre de producteurs, le nombre de consommateurs
-    // et la taille du tampon.
-    int nombreDeProducteurs = atoi(argv[1]);
-    int nombreDeConsommateurs = atoi(argv[2]);
-    int tailleDuTampon = atoi(argv[3]);
-    int tampon[tailleDuTampon];
-    int sommeConsommateurs = 0;
-    int sommeProducteurs = 0;
+   pthread_t *prodThreads = malloc(numProd * sizeof(pthread_t));
+   pthread_t *consThreads = malloc(numCons * sizeof(pthread_t));
+   tampon = malloc(sizeTampon * sizeof(int));
 
+   sem_init(&mutex, 0, 1);
+   sem_init(&libre, 0, sizeTampon);
+   sem_init(&occupe, 0, 0);
 
-    pthread_t threadsProducteurs[nombreDeProducteurs], threadsConsommateurs[nombreDeConsommateurs];
-    int ids[nombreDeProducteurs > nombreDeConsommateurs ? nombreDeProducteurs : nombreDeConsommateurs];
+   for (size_t i = 0; i < numProd; ++i)
+      pthread_create(&prodThreads[i], NULL, producteur, (void *)i);
 
-    // initialiser les Semaphores ici
-    sem_t* semProd = calloc(1, sizeof(sem_t));
-    int paratgeEntreProcessus = 0;
-    int valeurDeDepart = 1;
-    sem_init(semProd, paratgeEntreProcessus, valeurDeDepart);
+   for (size_t i = 0; i < numCons; ++i)
+      pthread_create(&consThreads[i], NULL, consommateur, (void *)i);
 
-    sem_t* semCons = calloc(1, sizeof(sem_t));
-    sem_init(semCons, paratgeEntreProcessus, tailleDuTampon); // pas sur pour la taille
-   
-    for (int i = 0; i < nombreDeProducteurs; i++) {
-        ids[i] = i;
-        pthread_create(&threadsProducteurs[i], NULL, producteur, (void*)&ids[i]);
-    }
+   signal(SIGALRM, actionAlarme);
+   alarm(1);
 
-    for (int i = 0; i < nombreDeConsommateurs; i++) {
-        ids[i] = i;
-        pthread_create(&threadsConsommateurs[i], NULL, consommateur, (void*)&ids[i]);
-    }
+   int nbTotalProduction = 0;
+   for (size_t i = 0; i < numProd; ++i)
+   {
+      int *exit_status;
+      pthread_join(prodThreads[i], (void **)&exit_status);
 
-    signal(SIGALRM, handler);
-    alarm(1);
+      nbTotalProduction += *exit_status;
+      free(exit_status);
+   }
 
-    for (int i = 0; i < nombreDeProducteurs; i++) {
-        void* somme;
-        pthread_join(threadsProducteurs[i], &somme);
-        sommeProducteurs += (long)somme;
-    }
+   sem_wait(&mutex);
+   int nbOverwrite = 0;
+   bool isOverwriting = false;
+   for (size_t i = 0; i < sizeTampon; ++i)
+   {
+      int value = tampon[ip];
+      tampon[ip] = 0;
 
-    // Insérer des 0 dans le tampon ici
+      isOverwriting = ip == ic || isOverwriting;
+      isOverwriting = value != 0 && isOverwriting;
 
-    for (int i = 0; i < nombreDeConsommateurs; i++) {
-        void* somme;
-        pthread_join(threadsConsommateurs[i], &somme);
-        sommeConsommateurs += (long)somme;
-    }
-    //Affiche les résultats
-    printf("Somme totale produite: %d\n", sommeProducteurs);
-    printf("Somme totale consommée: %d\n", sommeConsommateurs);
-    printf("Total chiffres produits: %d\n", chiffreProduit);
-    printf("Total chiffres consommés: %d\n", chiffreConsommes);
-    return 0;
+      if (isOverwriting)
+      {
+         sommeConsommee += value;
+         ++nbOverwrite;
+      }
+
+      ip = (ip + 1) % sizeTampon;
+   }
+   sem_post(&mutex);
+
+   int nbTotalConsommation = nbOverwrite;
+   for (size_t i = 0; i < numCons; ++i)
+   {
+      int *exit_status;
+      pthread_join(consThreads[i], (void **)&exit_status);
+
+      nbTotalConsommation += *exit_status;
+      free(exit_status);
+   }
+   printf("\033[0;31m\n");
+   printf("Somme totale produite: %d\n", nbTotalProduction);
+   printf("Somme totale consommée: %d\n", nbTotalConsommation);
+
+   printf("Total chiffres produits: %d\n", sommeProduit);
+   printf("Total chiffres consommés: %d\n", sommeConsommee);
+   printf("\033[0m");
+
+   free(prodThreads);
+   free(consThreads);
+   free(tampon);
+
+   return 0;
 }
