@@ -50,11 +50,52 @@ void rechercherTableDesPages(struct RequeteMemoire* req, struct SystemeMemoire* 
 }
 
 void ajouterDansMemoire(struct RequeteMemoire* req, struct SystemeMemoire* mem) {
-	//TODO
+	unsigned int numeroDePage = calculerNumeroDePage(req->adresseVirtuelle);
+	unsigned long offsetAdresse = calculerDeplacementDansLaPage(req->adresseVirtuelle);
+
+	for (unsigned int i = 0; i < TAILLE_MEMOIRE; i++)
+	{
+		if (!mem->memoire->utilisee[i])
+		{
+			req->adressePhysique = calculerAdresseComplete(i, offsetAdresse);
+
+			mem->memoire->numeroPage[i] = numeroDePage;
+			mem->memoire->dateCreation[i] = req->date;
+			mem->memoire->dernierAcces[i] = req->date;
+			mem->memoire->utilisee[i] = 1;
+
+			return;
+		}
+	}
 }
 
 void mettreAJourTLB(struct RequeteMemoire* req, struct SystemeMemoire* mem) {
-	// TODO
+	int indiceRemplacement = 0;
+	int numeroPage = calculerNumeroDePage(req->adresseVirtuelle);
+	int numeroCadre = calculerNumeroDePage(req->adressePhysique);
+	unsigned long plusAncienneDate = mem->tlb->dateCreation[numeroPage];
+
+	for (int i = 0; i < TAILLE_TLB; i++)
+	{
+		if (mem->tlb->entreeValide[i])
+		{
+			if (mem->tlb->dateCreation[i] < plusAncienneDate)
+			{
+				plusAncienneDate = mem->tlb->dateCreation[i];
+				indiceRemplacement = i;
+			}
+		}
+		else
+		{
+			indiceRemplacement = i;
+			break;
+		}
+	}
+	mem->tlb->numeroPage[indiceRemplacement] = numeroPage;
+	mem->tlb->numeroCadre[indiceRemplacement] = numeroCadre;
+	mem->tlb->entreeValide[indiceRemplacement] = 1;
+	mem->tlb->dernierAcces[indiceRemplacement] = req->date;
+	mem->tlb->dateCreation[indiceRemplacement] = req->date;
 }
 
 // NE PAS MODIFIER
